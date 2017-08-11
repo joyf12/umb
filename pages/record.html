@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" style="line-height:44px;">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">借伞记录</h1>
+		    <!--<span style="float:right;font-size:16px;z-index: 50;" id="help">需要帮助?</span>-->
+		</header>
+		<div class="mui-content">	
+		    <ul style="padding-left:20px;padding-right:20px;">
+		    	<li style="list-style:none;padding-left:5px;margin-bottom:20px;">
+		    		<div>
+		    			<p>
+			    			<span></span>
+			    			<span>2017-08-01 07:25</span>
+			    		</p>
+			    		<p>
+			    			<span>雨伞编号：86505050550</span>
+			    		</p>
+			    		<p>
+			    			<span class="mui-icon iconfont icon-shijian" style="color:#24DE55"><i style="font-style:normal;color:#000;">使用时间：20分钟</i></span>
+			    			<span class="mui-icon iconfont icon-ichuafei" style="color:#F9E20D"><i style="font-style:normal;color:#000;">使用花费：0元</i></span>
+			    		</p>
+		    		</div>
+		    	</li>
+		    </ul>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				uid=plus.storage.getItem('uid');
+				token = plus.storage.getItem('token');
+				mui.ajax(url+'/listUserTravelOrder',{
+					data:{
+						uid:uid,
+						pageNumber:1,
+						pageSize:6
+					},
+					type:'post',
+					dataType:'json',
+					headers:{'Content-type':'application/json'},
+					beforeSend:function(xhr){
+						xhr.setRequestHeader('token',token)
+					},
+					success:function(data){
+						console.log(JSON.stringify(data));
+					},
+					error:function(error){
+						alert(JSON.stringify(error));
+					}
+				})
+			})
+			var uid = '';
+			var token = '';
+			var url ='https://sys.farina.cc/umb';
+		</script>
+	</body>
+
+</html>

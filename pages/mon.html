@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title"></h1>
+		</header>
+		<div class="mui-content" style="padding-left:20px;padding-right:20px;">
+		    <div style="margin-top:20px;margin-bottom:30px;">
+		    	<h1>我的钱包</h1>
+		    </div>
+		    <div>
+		    	<div style="display: inline-block;height:50px;">
+		    		<h4>余额</h4>
+		    		<strong id="ba"></strong>
+		    	</div>
+		    	<div style="display: inline-block;float:right;">
+		    		<input type="button" id="recharge" value="充值" style="background:#fff;color:#000;border:1px solid #666;" />
+		    	</div>
+		    </div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				var self = plus.webview.currentWebview();
+				var bal = self.bal;
+				document.getElementById('ba').innerText=bal;
+			});
+			document.getElementById('recharge').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'./recharge.html',
+					id:'recharge'
+				})
+			})
+		</script>
+	</body>
+
+</html>

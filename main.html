@@ -1,0 +1,289 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>首页</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta http-equiv="Access-Control-Allow-Origin" content="">
+ 		<meta http-equiv="content-security-policy">
+ 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=rmtT1e2a4k770D9jK1ouGODt"></script>
+		<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=CpcFGrhdaBnn2ZYsk6I5CEbnNzToCGPq"></script>-->
+		<!--<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>-->
+		<script src="js/mui.min.js"></script>
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+		<style type="text/css">
+            .mui-popover{
+                position: fixed;
+                width: 100%;
+                height: auto;
+                border-radius: 0;
+                left: 50%;
+                bottom: 0px;
+                margin: 0 auto;
+                z-index: 9999;
+                background-color: #fff;
+                -webkit-transform: translateX(-50%) translateY(0);
+                -moz-transform: translateX(-50%) translateY(0);
+                -ms-transform: translateX(-50%) translateY(0);
+                transform: translateX(-50%) translateY(0);
+            }
+            .mui-popover-arrow{
+                display: none;
+            }
+            /*#popover .mui-table-view li {
+            	border:none;
+            }*/
+        </style>
+	</head>
+	<body style="position: relative;">
+		<header class="mui-bar mui-bar-nav head">
+		    <a class="mui-icon mui-icon-person mui-pull-left" id="user"></a>
+		    <h1 class="mui-title">法瑞纳雨伞</h1>
+		    <a href="" class="mui-icon mui-icon-chatboxes mui-pull-right" id="message" style="position:relative;"><i style="font-style:normal;position:absolute;left:29px;top:-3px;color:red;">.</i></a>
+		</header>
+		<div id="popover" class="mui-popover">
+			<div style="height:40px;line-height:40px;padding-left:15px;color:#666">客户服务</div>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell" id="lock"><span class="mui-icon iconfont icon-suo">&nbsp;</span>开不了锁</li>
+				<li class="mui-table-view-cell" id="fault"><span class="mui-icon iconfont icon-guzhang">&nbsp;</span>发现雨伞故障</li>
+				<li class="mui-table-view-cell" id="problem"><span class="mui-icon iconfont icon-wenti">&nbsp;</span>其他问题</li>
+			</ul>
+		</div>
+		
+		<div class="mui-content" id="allmap">
+			<p style="position:absolute;top:60px;background-color:red;"></p>
+		</div>
+		
+	</body>
+</html>
+<script type="text/javascript">
+	mui.init();
+	mui.plusReady(function(){
+		uid = plus.storage.getItem('uid');
+		token = plus.storage.getItem('token');
+//		plus.storage.removeItem('uid');
+	});
+	var uid = '';
+//	var token = '';
+	//获取当前位置信息
+	var geolocation = new BMap.Geolocation();
+	geolocation.getCurrentPosition(function(p){
+//		alert(JSON.stringify(p))
+		lon = p.longitude;//经度
+		lati = p.latitude;//纬度
+		//请求附近的雨伞
+		mui.ajax(url+'/appGetShareBikeInfo',{
+			data:{
+				latitude:lati,
+				longitude:lon,
+				scale:13
+			},
+			type:'get',
+			dataType:'json',
+			success:function(data){
+					
+				var arr1 = [];
+					
+				var arr = data.data;
+				for(var i=0;i<arr.length;i++){
+					arr1.push(new BMap.Point(arr[i].longitude,arr[i].latitude));
+				}
+				var total = 0;//总记录数
+				var groupCount=0;//每次转十条坐标
+				if(arr1.length%10>0){
+					groupCount=Math.floor(arr1.length/10)+1;
+				}else{
+					groupCount=arr1.length/10;
+				}
+				for(var j=0;j<groupCount;j++){//遍历一共有多少组10条
+					var pos = new Array();
+					for(var z = 0;z<10;z++){
+						if(total<arr1.length){ //不超过总记录数结束
+				            pos.push(new BMap.Point(arr1[(j* 10) + z].lng,arr1[(j * 10) + z].lat));
+				            total++;
+						}else{
+							break;
+							}
+						}
+					var convertor = new BMap.Convertor();
+				    convertor.translate(pos, 1, 5, function(data){
+				        if(data.status === 0) {
+				            for (var i = 0; i < data.points.length; i++) {
+				                map.addOverlay(new BMap.Marker(data.points[i]));
+				                map.setCenter(data.points[i]);
+				            }
+				        }
+				    });
+						
+				}
+					
+			},
+			error:function(){
+				alert('请求数据失败')
+				}
+			})
+	
+			//添加标注
+			var marker = new BMap.Marker(p.point);//创建标注坐标
+			
+			var label = new BMap.Label((p.address.street+p.address.street_number),{offset:new BMap.Size(20,-10)});
+			var myIcon = new BMap.Icon('images/1.png',new BMap.Size(30,40));
+			marker.setLabel(label);
+			marker.setIcon(myIcon);
+			map.addOverlay(marker);
+			map.panTo(p.point);
+			//获取当前城市的站点信息
+			var city = p.address.city;
+		})
+	var url = 'https://sys.farina.cc/umb';
+	var lati = '';
+	var lon ='';
+	var uid = '';//获取用户手机号码
+	var token = '';
+	var pop = document.getElementById('popover');
+	var map = new BMap.Map('allmap');
+	map.centerAndZoom(new BMap.Point(121.473754,31.23037), 13);
+	map.setMinZoom(11);
+	map.setMaxZoom(15);
+//	map.enableScrollWheelZoom(true);
+	//扫码控件
+	function ScanCode() {
+		this.defaultAnchor = BMAP_ANCHOR_BOTTOM_RIGHT;
+		this.defaultOffset = new BMap.Size(125, 45);
+	}
+	ScanCode.prototype = new BMap.Control();
+	ScanCode.prototype.initialize = function(map) {
+		var div = document.createElement("div");
+		div.style.height = "2.7em";
+		div.style.width = "7em";
+		div.style.background = "url(images/scan_code.png) no-repeat";
+		div.style.backgroundSize = "100%,100%";
+		div.style.opacity='0.5';
+		div.onclick = function(e) {
+			//首先判断用户是否登录
+			if(!uid){
+				//没有登录，跳转到登录页面
+				mui.toast('你还没有登录，请先登录');
+				mui.later(function(){
+					mui.openWindow({
+						url:'login.html'
+					});
+				},1000)
+				return;
+			}else{
+				//已登录，获取当前用户状态
+				mui.ajax(url+'/getNoFinishedTravelOrder',{
+					data:{
+						uid:uid
+					},
+					type:'get',
+					dataType:'json',
+					beforeSend:function(xhr){
+						xhr.setRequestHeader('token',token)
+					},
+					success:function(data){
+//						console.log(JSON.stringify(data));
+						if(data.success==1002){
+							//跳转到扫码页面
+							mui.openWindow({
+								url:'pages/scan.html'
+//								url:'ceshi.html'
+							})
+							
+						}else if(data.success==1001){
+							mui.toast('您现在有未完成订单，不可以再次借伞');
+						}
+					},
+					error:function(error){
+						console.log(JSON.stringify(error));
+					}
+				})
+				
+			}
+//			mui.openWindow({
+//				url:'pages/scan.html'
+//			})
+
+		}
+		map.getContainer().appendChild(div);
+		return div;
+	}
+		var ScanCode = new ScanCode();
+		map.addControl(ScanCode);
+		
+	// 添加定位控件    
+	var geoCtrl = new BMap.GeolocationControl({
+		showAddressBar: false,
+		enableAutoLocation: true,
+		offset: new BMap.Size(10, 50),
+		locationIcon: new BMap.Icon("images/location_marker.png", new BMap.Size(30, 30))
+	})
+	geoCtrl.addEventListener("locationSuccess", function(e) {
+		console.log("定位成功");
+	});
+	geoCtrl.addEventListener("locationError", function(e) {
+		console.log(e);
+	});
+	map.addControl(geoCtrl);
+	//客服控件
+	function CustomerService() {
+		this.defaultAnchor = BMAP_ANCHOR_BOTTOM_RIGHT;
+		this.defaultOffset = new BMap.Size(10, 40);
+	}
+	
+	CustomerService.prototype = new BMap.Control();
+	CustomerService.prototype.initialize = function(map) {
+		var mask = mui.createMask(function(){
+                pop.classList.remove('mui-active');
+            });
+		var div = document.createElement("div");
+		div.style.height = "3em";
+		div.style.width = "3em";
+		div.style.background = "url(images/customer_service.png)";
+		div.style.backgroundSize = "100%,100%";
+		div.addEventListener('tap',function(){
+			mask.show();
+			pop.classList.add('mui-active');
+		})
+		map.getContainer().appendChild(div);
+		return div;
+	}
+	var CustomerService = new CustomerService();
+	map.addControl(CustomerService);
+	
+	
+	document.getElementById('user').addEventListener('tap',function(){
+		mui.openWindow({
+			url:'./pages/user.html',
+			id:'user'
+		})
+	})
+	document.getElementById('message').addEventListener('tap',function(){
+		mui.openWindow({
+			url:'./pages/message.html',
+//			id:'message'
+		})
+	})
+	//开不了锁
+	document.getElementById('lock').addEventListener('tap',function(){
+		mui.openWindow({
+			url:'./pages/lock.html'
+		})
+	})
+	//发现雨伞故障
+	document.getElementById('fault').addEventListener('tap',function(){
+		mui.openWindow({
+			url:'./pages/fault.html'
+		})
+	})
+	//其他问题
+	document.getElementById('problem').addEventListener('tap',function(){
+		mui.openWindow({
+			url:'./pages/problem.html'
+		})
+	})
+</script>

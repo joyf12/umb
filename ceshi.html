@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<meta name="HandheldFriendly" content="true"/>
+		<meta name="MobileOptimized" content="320"/>
+		<title>Hello H5+</title>
+		<script type="text/javascript">
+			var ws=null,wo=null;
+			var scan=null,domready=false;
+			// H5 plus事件处理
+			function plusReady(){
+				if(ws||!window.plus||!domready){
+					return;
+				}
+				// 获取窗口对象
+				ws=plus.webview.currentWebview();
+				wo=ws.opener();
+				// 开始扫描
+				ws.addEventListener('show', function(){
+					scan=new plus.barcode.Barcode('bcid');
+				    scan.onmarked=onmarked;
+				    scan.start({conserve:true,filename:'_doc/barcode/'});
+				}, false);
+				// 显示页面并关闭等待框
+			    ws.show('pop-in');
+			    wo.evalJS('closeWaiting()');
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener('plusready', plusReady, false);
+			}
+			// 监听DOMContentLoaded事件
+			document.addEventListener('DOMContentLoaded', function(){
+				domready=true;
+				plusReady();
+			}, false);
+			// 二维码扫描成功
+			function onmarked(type, result, file){
+			    switch(type){
+			    	case plus.barcode.QR:
+			    	type = 'QR';
+			    	break;
+			    	case plus.barcode.EAN13:
+			    	type = 'EAN13';
+			    	break;
+			    	case plus.barcode.EAN8:
+			    	type = 'EAN8';
+			    	break;
+			    	default:
+			    	type = '其它'+type;
+			    	break;
+			    }
+			    result = result.replace(/\n/g, '');
+			    wo.evalJS("scaned('"+ type +"','"+ result +"','"+ file +"');");
+			    back();
+			}
+			// 从相册中选择二维码图片 
+			function scanPicture(){
+			    plus.gallery.pick(function(path){
+				    plus.barcode.scan(path,onmarked,function(error){
+						plus.nativeUI.alert(Page.All.NotImg);
+					});
+			    }, function(err){
+			        plus.nativeUI.alert('Failed: '+err.message);
+			    });
+			}
+		</script>
+		<style type="text/css">
+			#bcid {
+				width: 100%;
+				position: absolute;
+				top: 0px;
+				bottom: 44px;
+				text-align: center;
+			}
+			.tip {
+				color: #FFFFFF;
+				font-weight: bold;
+				text-shadow: 0px -1px #103E5C;
+			}
+			footer {
+				width: 100%;
+				height: 44px;
+				position: absolute;
+				bottom: 44px;
+				line-height: 44px;
+				text-align: center;
+				color: #FFF;
+				left: 0;
+			}
+			.fbt {
+				width: 50%;
+				height: 100%;
+				background-color: #459ef6;
+				float: left;
+				font-family:  "microsoft yahei";
+			}
+			.fbt:active {
+			  	-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.5);
+				box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.5);
+			}
+		</style>
+	</head>
+	<body style="background-color: #000000;">
+			<div id="bcid">
+				<div style="height:40%"></div>
+				<p class="tip lng" data-text="All:InLoading">...加载中...</p>
+			</div>
+			<footer>
+				<div class="fbt lng" onclick="back()" data-text="All:Canel">取消</div>
+				<div class="fbt lng" onclick="scanPicture()" data-text="All:CreateSacn">从相册选择二维码</div>
+			</footer>
+	</body>
+	</html>
+	<script>
+		var as = 'pop-in'; // 默认窗口动画
+		// 处理点击事件
+		var _openw = null;
+		/**
+		 * 点击打开新窗口
+		 * @param {Object} id	加载的页面地址，也用作窗口标识
+		 * @param {Object} a	页面动画内心，默认使用全局as设置的值
+		 * @param {Object} s	是否不显示窗口
+		 */
+		function clicked(id,par, a, s) {
+			if(_openw) {
+				return;
+			}
+			a || (a = as);
+			_openw = preate[id];
+			if(_openw) {
+				_openw.showded = true;
+				_openw.show(a, null, function() {
+					_openw = null; //避免快速点击打开多个页面
+				});
+			} else {
+				//		var wa=plus.nativeUI.showWaiting();
+				//		_openw=plus.webview.create(id,id,{scrollIndicator:'none',scalable:false,popGesture:'hide'},{preate:true});//复用二级页面
+				_openw = plus.webview.create(id, id, {
+					scrollIndicator: 'none',
+					scalable: false,
+					popGesture: 'close'
+				},par);
+				preate[id] = _openw;
+				//_openw.addEventListener('loaded', function() { //叶面加载完成后才显示
+				//		setTimeout(function(){//延后显示可避免低端机上动画时白屏
+				//			wa.close();
+					_openw.showded = true;
+					s || _openw.show(a, null, function() {
+						_openw = null; //避免快速点击打开多个页面
+					});
+					s && (_openw = null); //避免s模式下变量无法重置
+					//		},10);
+					//}, false);
+					_openw.addEventListener('hide', function() {
+						_openw && (_openw.showded = true);
+						_openw = null;
+					}, false);
+					_openw.addEventListener('close', function() { //页面关闭后可再次打开
+						_openw = null;
+						preate[id] && (preate[id] = null); //兼容窗口的关闭
+					}, false);
+				}
+			}
+			// 预创建二级页面
+			var preate = {};
+	
+			// 清除预创建页面(仅)
+			function preateClear() {
+				for(var p in preate) {
+					var w = preate[p];
+					if(w && w.showded && !w.isVisible()) {
+						w.close();
+						preate[p] = null;
+					}
+				}
+			}
+		</script>

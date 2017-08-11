@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">实名认证</h1>
+		</header>
+		<div class="mui-content">
+		    <form class="mui-input-group">
+				<div class="mui-input-row" id="box">
+					<label style="padding-left:20px;padding-right:0px;width:30%;">姓名</label>
+					<input type="number" style="float:left;width:40%;" id="name" placeholder="请输入姓名">
+				</div>
+				
+				<div class="mui-input-row">
+					<label style="padding-left:20px;padding-right:0px;width:30%;">身份证号</label>
+					<input type="number" style="float:left;width:40%;" id="number" class="mui-input-clear" placeholder="请输入身份证号">
+				</div>
+				<div class="mui-button-row">
+					<button type="button" style="width:90%;" id="sub" class="mui-btn mui-btn-primary">提交</button>
+				</div>
+			</form>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			//获取用户信息
+			document.getElementById('sub').addEventListener('tap',function(){
+				var name = document.getElementById('name').value;
+				var num = document.getElementById('number').value;
+				//将用户名和身份证号发送到后台
+				
+				//实名认证成功，跳转到主页面
+				mui.openWindow({
+					url:'main.html'
+				})
+				mui.back();
+			})
+		</script>
+	</body>
+
+</html>

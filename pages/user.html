@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+	</head>
+	
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">用户信息</h1>
+		</header>
+		<nav class="mui-bar mui-bar-tab" style="width:100%;">
+			<span id="set" style="display:inline-block;width:20%;text-align:center;line-height:50px;">设置</span>
+			<span id="guide" style="display:inline-block;width:40%;text-align:center;line-height: 50px;">用户指南</span>
+		</nav>
+		<div class="mui-content">
+		    <div style="padding:30px 15px;background:#ccc;">
+		    	<a href="#">
+		    		<div style="display: inline-block;width:15%;margin-right:5%;">
+		    			<img src="../images/user-photo.png" style="width:100%;text-align:center;vertical-align: middle;"/>
+		    		</div>
+		    		<div style="display: inline-block;vertical-align: middle;width:70%;">
+		    			<div>
+		    				<span id="phone" style="display: inline-block;margin-bottom:5px;"></span>
+		    			</div>
+		    			<div style="width:100%;">
+		    				<span id="member" style="display: inline-block;width:30%;border:1px solid orangered;border-radius:10px;background:orangered;color:#fff;text-align:center;">会员</span>
+		    				<span id="part" style="display: inline-block;width:60%;text-align:center;background:#4CD964;border:1px solid #4CD964;border-radius:10px;color:#fff;">信用积分<strong>100</strong> ></span>
+		    			</div>
+		    		</div>
+		    	</a>
+		    </div>
+		    <div class="container">
+		    	<ul class="lis" style="padding:20px 30px;">
+		    		<li id="mon" style="list-style: none;margin-bottom:20px;">
+		    			<span class="mui-icon iconfont icon-qianbao">&nbsp;我的钱包 </span>
+		    			<strong id="bal" style="float:right"></strong>
+		    		</li>
+		    		<!--<li id="car" style="list-style: none; margin-bottom:20px;">
+		    			<span class="mui-icon iconfont icon-icon1460192056289">&nbsp;我的卡券</span>
+		    			<stong style='float:right;'>3张</stong>
+		    		</li>-->
+		    		<li id="record" style="list-style: none;margin-bottom:20px;">
+		    			<span class="mui-icon iconfont icon-jilu">&nbsp;借伞记录</span>
+		    		</li>
+		    		<li id="call" style="list-style: none;margin-bottom:20px;">
+		    			<span class="mui-icon iconfont icon-yaoqinghaoyou"></span>
+		    		</li>
+		    	</ul>
+		    </div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				uid = plus.storage.getItem('uid');
+				token = plus.storage.getItem('token');
+				mui.ajax(url+'/loaduserinfo',{
+					data:{uid:uid},
+					type:'post',
+					dataType:'json',
+					beforeSend:function(xhr){
+						xhr.setRequestHeader('token',token)
+					},
+//					headers:{'Content-type':'application/json'},
+					success:function(data){
+//						console.log(JSON.stringify(data));
+						document.getElementById('phone').innerText=data.data.realName;
+						document.getElementById('bal').innerText=data.data.accountBalance+'元';
+					},
+					error:function(error){
+//						alert(JSON.stringify(error));
+					}
+				})
+			})
+			var uid = '';//用户手机号
+			var token = '';//token
+			var url = 'https://sys.farina.cc/umb';
+			//用户信息查看
+//			document.getElementById('top').addEventListener('tap',function(){
+//				alert('top的事件被触发')
+//				mui.openWindow({
+//					url:'../pages/person.html',
+//					id:'top'
+//				})
+//			},false)
+			//会员查看
+			document.getElementById('member').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/member.html',
+					id:'member'
+				})
+			},false)
+			//信用分查看
+			document.getElementById('part').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/part.html',
+					id:'part'
+				})
+			},false)
+			//我的钱包
+			
+			document.getElementById('mon').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/mon.html',
+					extras:{
+						bal:document.getElementById('bal').innerText
+					}
+				})
+			},false)
+			//我的卡券
+//			document.getElementById('car').addEventListener('tap',function(){
+//				mui.openWindow({
+//					url:'../pages/car.html',
+//					id:'car'
+//				})
+//			},false)
+			//借伞记录
+			document.getElementById('record').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/record.html',
+					id:'record'
+				})
+			},false)
+			//邀请好友
+			document.getElementById('call').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/call.html',
+					id:'call'
+				})
+			},false)
+			//设置 页面
+			document.getElementById('set').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/set.html',
+					id:'set'
+				})
+			},false)
+			//用户指南
+			document.getElementById('guide').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/guide.html',
+					id:'guide'
+				})
+			},false)
+		</script>
+	</body>
+
+</html>

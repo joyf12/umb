@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<script src="../js/mui.min.js"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">设置</h1>
+		</header>
+		<div class="mui-content">
+		    <ul style="padding-left:0px;padding-left:20px;padding-right:20px;">
+		    	<li style="list-style:none;margin-bottom:20px;" id="about">关于我们</li>
+		    	<li style="list-style:none;margin-bottom:20px;" id="agreement">用户协议</li>
+		    	<li style="list-style:none;margin-bottom:20px;" id="cash">押金说明</li>
+		    	<li style="list-style:none;margin-bottom:20px;" id="rech">充值说明</li>
+		    	<li style="list-style:none;margin-bottom:20px;" id="update">检查更新</li>
+		    </ul>
+		    <buttoon id='exit' style='width:90%;margin-left:5%;' class="mui-btn mui-btn-success">退出登录</buttoon>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){})
+			var url ='https://sys.ibike365.cn/umb';
+			//关于我们
+			document.getElementById('about').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/about.html',
+					id:'about'
+				})
+			})
+			//用户协议
+			document.getElementById('agreement').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/agreement.html',
+					id:'agreement'
+				})
+			})
+			//押金说明
+			document.getElementById('cash').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/cash.html',
+					id:'cash'
+				})
+			})
+			//充值说明
+			document.getElementById('rech').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/rech.html',
+					id:'rech'
+				})
+			})
+			//检查更新
+			document.getElementById('update').addEventListener('tap',function(){
+				
+			})
+			//退出登录
+			document.getElementById('exit').addEventListener('tap',function(){
+				plus.nativeUI.showWaiting( "正在退出..." );
+				plus.storage.removeItem('uid');
+				plus.storage.removeItem('token');
+				mui.openWindow({
+					url:'../main.html'
+				})
+				
+				plus.nativeUI.closeWaiting();
+			})
+			
+		</script>
+	</body>
+
+</html>

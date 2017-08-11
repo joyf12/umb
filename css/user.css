@@ -1,0 +1,17 @@
+
+/*登录界面的样式*/
+body,html,#allmap,.mui-content{cursor:pointer;width:100%;height:100%;font-family:'微软雅黑';overflow: hidden;margin:0;}
+
+.mui-title{color: #323c46;font-size: 25px;top: 8px;text-align: center;}
+.head a{color: white;line-height: 30px;}
+.mui-bar-nav{box-shadow: 0 0px 0px transparent;}
+.mui-bar{background-color: transparent;}
+.mui-content{width: 100%;padding-left:5%;padding-right:5%;background:transparent;}
+.mui-content-padded{margin: 0;}
+.mui-btn-block{border: none;}
+.mui-bar-nav~.mui-content { padding-top:0px; }
+.mui-content-padded {margin-top: 25px;}
+#container .lis li {
+	margin-bottom:20px;
+}
+/*用户界面的样式*/

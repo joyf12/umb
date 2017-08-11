@@ -1,0 +1,58 @@
+<!doctype html>
+<html style="height:100%;">
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+	</head>
+
+	<body style="height:100%;">
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">押金充值</h1>
+		</header>
+		<div class="mui-content" style="height:100%;">
+		    <div style="background:deepskyblue;height:30%;padding-left:5%;padding-right:5%;text-align:center;padding-top:20%;">
+		    	<span style="font-size:12px;color:#fff;">手机验证——</span>
+		    	<span style="font-size:12px;color:#fff;">押金充值——</span>
+		    	<!--<span style="font-size:12px;color:#fff;">实名认证——</span>-->
+		    	<span style="font-size:12px;color:#fff;">注册成功</span>
+		    </div>
+		    <div>
+		    	<ul style="padding-left:5%;padding-right:5%;">
+		    		<li style="list-style:none;font-size:20px;height:40px;">押金(可退) <span style="float:right;"><strong>￥39</strong></span></li>
+		    		<li class="mui-icon iconfont icon-wechat" style="list-style: none;height:40px;width:100%;color:#489D70;">&nbsp;<strong style="color:#000">微信支付</strong><input type="radio" name='pay' value="微信支付" style="float:right;"/></li>
+		    		<li class="mui-icon iconfont icon-zhifubao1" style="list-style: none;height:40px;width:100%;color:#00A8F1;">&nbsp;<strong style="color:#000;">支付宝支付</strong><input type="radio" name='pay' value='支付宝支付' style="float:right;"/></li>
+		    	</ul>
+		    </div>
+		    <div style="width:100%;text-align: center;margin-top:40%;">
+		    	<span>点击充值，即表示已阅读并同意<a href="#" style="color:deepskyblue">充值说明</a></span>
+		    	<button type="button" id="rec" class="mui-btn mui-btn-primary" style="width:90%;margin-top:10px;">立即充值</button>
+		    </div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			
+			document.getElementById('rec').addEventListener('tap',function(){
+				
+				//获取付款方式
+				var rads = document.getElementsByName('pay');
+				var seleValue= null;
+				for(var i=0;i<rads.length;i++){
+					if(rads[i].checked==true){
+						seleValue=rads[i].value;
+						console.log(seleValue);
+						break;
+					}
+				}
+				//调用支付宝或微信
+				
+			})
+		</script>
+	</body>
+
+</html>

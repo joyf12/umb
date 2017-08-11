@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">用户指南</h1>
+		</header>
+		<div class="mui-content">
+		    <ul style="padding-left:20px;padding-right:20px;">
+		    	<li id="cash" style="list-style:none;padding-bottom:20px;">押金说明</li>
+		    	<li id="rech" style="list-style:none;padding-bottom:20px;">充值说明</li>
+		    	<li id="cost" style="list-style:none;padding-bottom:20px;">费用说明</li>
+		    	<li id="store" style="list-style:none;padding-bottom:20px;">信用分说明</li>
+		    </ul>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			//押金说明
+			document.getElementById('cash').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/cash.html',
+					id:'cash'
+				})
+			})
+			//充值说明
+			document.getElementById('rech').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/rech.html',
+					id:'rech'
+				})
+			})
+			//费用说明
+			document.getElementById('cost').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/cost.html',
+					id:'cost'
+				})
+			})
+			//信用分说明
+			document.getElementById('store').addEventListener('tap',function(){
+				mui.openWindow({
+					url:'../pages/store.html',
+					id:'store'
+				})
+			})
+		</script>
+	</body>
+
+</html>

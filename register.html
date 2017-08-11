@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/iconfont.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">用户注册</h1>
+		    <a class="mui-icon iconfont icon-kefu mui-icon-right-nav mui-pull-right"></a>
+		</header>
+		<div class="mui-content">
+		    <form class="mui-input-group">
+				<div class="mui-input-row" id="box">
+					<label style="padding-left:20px;padding-right:0px;width:25%;">手机号</label>
+					<input type="number" style="float:left;width:35%;" id="phoneNumber" placeholder="请输入手机号">
+					<button type="button" style="float:right;width:30%;margin-right:20px;margin-top:2px;padding-top:10px;padding-bottom:10px;padding-left:5px;padding-right:5px;" id="getCodeNumber" class="mui-btn mui-btn-primary">获取验证码</button>
+				</div>
+				<div class="mui-input-row">
+					<label style="padding-left:20px;padding-right:0px;width:25%;">密码</label>
+					<input id="password" type="password" style="float:left;width:40%;" id="phoneNumber" class="mui-input-clear" placeholder="请输入六位密码">
+				</div>
+				<div class="mui-input-row">
+					<label style="padding-left:20px;padding-right:0px;width:25%;">确认密码</label>
+					<input id="password1" type="password" style="float:left;width:40%;" id="phoneNumber" class="mui-input-clear" placeholder="请再次输入密码 ">
+				</div>
+				<div class="mui-input-row">
+					<label style="padding-left:20px;padding-right:0px;width:25%;">验证码</label>
+					<input type="number" style="float:left;width:40%;" id="phoneNumber" class="mui-input-clear" placeholder="请输入验证码">
+				</div>
+				<div class="mui-button-row">
+					<button type="button" style="width:80%;" id="reg" class="mui-btn mui-action-back mui-btn-danger">注册</button>
+				</div>
+			</form>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var num = null;
+			
+			document.getElementById('getCodeNumber').addEventListener('tap',function(e){
+				//获取验证码的时候判断手机格式
+				var val = document.getElementById('phoneNumber').value;
+				console.log(val)
+				var regu = /^[1][3,5,7,8][0-9]{9}$/;
+				var re = new RegExp(regu);
+				if(!re.test(val)){
+					mui.alert('手机号码格式不正确，请确认');
+					return;
+				}
+				
+			})
+			//点击注册
+			document.getElementById('reg').addEventListener('tap',function(){
+				//获取到用户两次输入的密码是否一致
+				var password = document.getElementById('password').value;
+				var password1 = document.getElementById('password1').value;
+				if(password!=password1){
+					mui.alert('请确认两次输入的密码是否一致');
+					return;
+				}else{
+					//如果一致判断验证码
+					
+					//点击注册进入押金页面
+					mui.openWindow({
+						url:'./pages/pay.html'
+					})
+				}
+				
+				
+				
+				
+			})
+		</script>
+	</body>
+
+</html>

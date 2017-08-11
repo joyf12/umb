@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+		<style type="text/css">
+			.active button {
+				background:#00C901;
+				color:#fff;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">钱包充值</h1>
+		</header>
+		<nav class="mui-bar mui-bar-tab">
+			<p style="text-align:center;margin:0px;font-size:12px;color:#000;">点击充值，即表示已阅读并同意 <strong style="color:red">充值协议</strong></p>
+			<p style="text-align:center;margin-bottom:0px;font-size:12px;color:#000;">法瑞纳不会以任何形式要求您输入银行账号和密码</p>
+			<button id="cz" type="button" class="mui-btn mui-btn-success" style="width:90%;margin-left:5%;margin-bottom:10px;">去充值</button>
+		</nav>
+		<div class="mui-content" style="padding-left:20px;padding-right:20px;">
+		   <h4 style="margin-top:20px;">充值金额</h4>
+		   <div class="mui-row" style="width:100%;padding-bottom:30px;border-bottom:1px solid #ccc;" id="fig">
+		   		<div class="mui-col-sm-6 mui-col-xs-6 active">
+		   			<button class="mui-table-view-cell" style="width:100%;">
+		   				<!--<a href="#" class="mui-navigate-right"></a>-->
+		   				<strong>100</strong>
+		   			</button>
+		   		</div>
+		   		<div class="mui-col-sm-6 mui-col-xs-6">
+		   			<button class="mui-table-view-cell" style="width:100%;">
+		   				<!--<a href="#" class="mui-navigate-right"></a>-->
+		   				<strong>50</strong>
+		   			</button>
+		   		</div>
+		   		<div class="mui-col-sm-6 mui-col-xs-6">
+		   			<button class="mui-table-view-cell" style="width:100%;">
+		   				<!--<a href="#" class="mui-navigate-right"></a>-->
+		   				<strong>30</strong>
+		   			</button>
+		   		</div>
+		   		<div class="mui-col-sm-6 mui-col-xs-6">
+		   			<button class="mui-table-view-cell" style="width:100%;">
+		   				<!--<a href="#" class="mui-navigate-right"></a>-->
+		   				<strong>20</strong>
+		   			</button>
+		   		</div>
+		   		<div class="mui-col-sm-6 mui-col-xs-6">
+		   			<button class="mui-table-view-cell" style="width:100%;">
+		   				<!--<a href="#" class="mui-navigate-right"></a>-->
+		   				<strong>10</strong>
+		   			</button>
+		   		</div>
+		   </div>
+		   <ul style="padding:0px;">
+		   		<li style="list-style: none;margin-bottom:20px;">
+		   			<p class="mui-icon iconfont icon-weixinzhifu" style="color:#00C901;width:100%;">
+		   				<i style="font-style:normal;color:#000;font-size:18px;">微信</i>
+		   				<input type="radio" name="rad" style="float: right;" id="weixin1" value="微信支付"/>
+		   			</p>
+		   		</li>
+		   		<li style="list-style: none;">
+		   			<p class="mui-icon iconfont icon-zhifubao" style="color:#08A1F8;font-size:20px;width:100%;">
+		   				<i style="font-style:normal;color:#000;font-size:18px;">支付宝</i>
+		   				<input type="radio" name="rad" style="float: right;" id="zhifubao" value='支付宝支付'/>
+		   			</p>
+		   		</li>
+		   </ul>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swiperBack:true//右滑关闭
+			})
+			mui.plusReady(function(){
+				uid = plus.storage.getItem('uid');
+				token = plus.storage.getItem('token');
+				//获取支付通道(所有的支付方式)
+				plus.payment.getChannels(function(channels){
+					console.log(JSON.stringify(channels))
+					for(var i in channels){
+						if(channels[i].id=='wxpay'){
+							wxChannel=channels[i];
+						}else{
+							aliChannel=channels[i];
+						}
+					}
+				},function(e){
+					alert('获取支付通道失败：'+e.message);
+				})
+			});
+			var wxChannel = null;//微信支付
+			var aliChannel = null;//支付宝支付
+			var url = 'https://sys.farina.cc/umb';
+			var uid = '';
+			var token = '';
+			
+			var type = 1;//余额充值
+			var pay_type= '';//支付方式
+			var channel=null;//支付通道
+//			var ALIPAYSERVER='http://demo.dcloud.net.cn/helloh5/payment/alipay.php?total=';  
+//      	var WXPAYSERVER='http://demo.dcloud.net.cn/helloh5/payment/wxpay.php?total='; 
+        	var total_price = '';//充值金额
+		
+			//监听父元素的点击事件
+			document.getElementById('fig').addEventListener('tap',function(e){
+				var par = e.target.parentNode;
+				//获取所有金额
+				var lis = document.getElementById('fig').children;
+				for(var i=0;i<lis.length;i++){
+					//清除类名
+					lis[i].classList.remove('active');
+				}
+				//判断当前元素是否是div
+				if(par.nodeName.toUpperCase()=='DIV'){
+					par.classList.add('active');
+				}else if(par.parentNode.nodeName.toUpperCase()=='DIV'){
+					par.parentNode.classList.add('active');
+				}
+			},false);
+			//获取付款方式
+			function hq(){
+				var rads = document.getElementsByName('rad');
+				var seleValue= null;
+				for(var i=0;i<rads.length;i++){
+					if(rads[i].checked==true){
+						seleValue=rads[i].value;
+						break;
+					}
+				}
+				return seleValue;
+			}
+			//充值
+			document.getElementById('cz').addEventListener('tap',function(){
+				//获取金额
+				total_price = mui('.active')[0].innerText;
+				//获取充值方式
+				var way = hq();
+				if(way=='支付宝支付'){
+					pay_type=2;
+				}else if (way=='微信支付'){
+					pay_type=1;	
+				}
+				//服务器
+				mui.ajax(url+'/wxAppOrder',{
+					data:{
+						type:type,
+						uid:uid,
+						total_price:total_price,
+						pay_type:pay_type
+					},
+					type:'get',
+					dataType:'json',
+//					headers:{'Content-type':'application/json'},
+					beforeSend:function(xhr){
+						xhr.setRequestHeader('token',token)
+					},
+					success:function(data){
+						console.log(JSON.stringify(data));
+						if(way=='支付宝支付'){
+							pay('alipay');
+						}else if(way=='微信支付'){
+							alert('微信支付');
+							pay('wxpay');
+						}else if(way==null){
+							mui.toast('请选取支付方式 ！');
+							return;
+						}
+					},
+					error:function(error){
+						alert('支付失败')
+						console.log(JSON.stringify(error))
+					}
+				})
+				
+				//调用支付方法
+//				if(way=='支付宝支付'){
+//					pay('alipay');
+//				}else if(way=='微信支付'){
+//					pay('wxpay');
+//				}else if(way==null){
+//					mui.toast('请选取支付方式 ！');
+//					return;
+//				}
+			},false)
+			//发起支付请求
+			function pay(id){
+				//从服务器请求支付订单
+				
+				var PAYSERVER='';
+				if(id == 'alipay'){
+					PAYSERVER=ALIPAYSERVER;
+					channel = aliChannel;
+				}else if(id == 'wxpay'){
+					
+					PAYSERVER=WXPAYSERVER;
+					channel = wxChannel;
+				}else{
+					mui.toast('不支持该支付方式');
+					return;
+				}
+				var xhr = new XMLHttpRequest();
+				xhr.onreadystatechange=function(){
+					switch(xhr.readyState){
+						case 4:
+						if(xhr.status==200){
+							plus.payment.request(channel,xhr.responseText,function(result){
+								plus.nativeUI.alert('支付成功！',function(){
+									back();
+								})
+							},function(error){
+								plus.nativeUI.alert('支付失败：'+error.code);
+							})
+						}else {
+							mui.toast('获取订单信息失败！');
+						}
+						break;
+					}
+				}
+				xhr.open('GET',PAYSERVER+total_price);
+				xhr.send();
+				
+			}
+			
+		</script>
+	</body>
+
+</html>

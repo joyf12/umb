@@ -1,0 +1,144 @@
+{
+	"login.html": {
+		"resources": [
+			"images/user.png",
+			"css/login.css",
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"main.html",
+			"pages/pay.html",
+			"register.html",
+			"reg.html"
+		]
+	},
+	"main.html": {
+		"resources": [
+			"css/iconfont.css",
+			"js/mui.min.js",
+			"css/login.css",
+			"css/main.css",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"images/scan_code.png",
+			"images/customer_service.png",
+			"fonts/iconfont.ttf",
+			"images/center_point.png",
+			"images/1.png"
+		],
+		"refer": [
+			"pages/user.html",
+			"pages/scan.html",
+			"pages/message.html",
+			"login.html",
+			"ceshi.html"
+		]
+	},
+	"pages/user.html": {
+		"resources": [
+			"images/user-photo.png",
+			"fonts/iconfont.ttf",
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/iconfont.css",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"pages/person.html",
+			"pages/mon.html",
+			"pages/set.html",
+			"pages/car.html",
+			"pages/guide.html",
+			"pages/record.html"
+		]
+	},
+	"pages/person.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"images/user-photo.png"
+		],
+		"refer": []
+	},
+	"pages/mon.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"pages/recharge.html"
+		]
+	},
+	"pages/recharge.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/iconfont.css",
+			"css/mui.min.css",
+			"fonts/iconfont.ttf"
+		],
+		"refer": []
+	},
+	"pages/set.html": {
+		"refer": [
+			"login.html"
+		],
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css"
+		]
+	},
+	"pages/scan.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"fonts/iconfont.ttf",
+			"css/iconfont.css"
+		],
+		"refer": [
+			"pages/pscan.html"
+		]
+	},
+	"pages/message.html": {
+		"resources": [
+			"js/mui.min.js",
+			"css/mui.min.css"
+		],
+		"refer": []
+	},
+	"register.html": {
+		"resources": [
+			"css/iconfont.css",
+			"fonts/iconfont.ttf",
+			"css/mui.min.css"
+		],
+		"refer": []
+	},
+	"pages/record.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/iconfont.css",
+			"css/mui.min.css",
+			"fonts/iconfont.ttf"
+		]
+	},
+	"ceshi.html": {
+		"resources": [
+			"js/mui.min.js"
+		]
+	},
+	"pages/pscan.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css"
+		]
+	}
+}

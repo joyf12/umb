@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">手机登录</h1>
+		</header>
+		<div class="mui-content">
+		    <form class="mui-input-group">
+				<div class="mui-input-row" id="box">
+					<label style="padding-left:20px;padding-right:0px;width:20%;">手机号</label>
+					<input type="number" style="float:left;width:40%;text-indent: 1em;" id="phoneNumber" placeholder="请输入手机号">
+					<button type="button" style="float:right;width:30%;margin-right:20px;margin-top:2px;padding-top:10px;padding-bottom:10px;padding-left:5px;padding-right:5px;" id="getCodeNumber" class="mui-btn mui-btn-primary">获取验证码</button>
+				</div>
+				
+				<div class="mui-input-row">
+					<label style="padding-left:20px;padding-right:0px;width:20%;">验证码</label>
+					<input type="number" style="float:left;width:40%;text-indent:1em;" id="code" class="mui-input-clear" placeholder="请输入验证码">
+				</div>
+				<div class="mui-button-row">
+					<button type="button" style="width:80%;" id="log" class="mui-btn mui-action-back mui-btn-danger">登录</button>
+				</div>
+			</form>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){});
+			var url ='https://sys.ibike365.cn/umb';
+			var flag = true;
+			var t = 60;
+			var uid = '';
+			//获取验证码
+			document.getElementById('getCodeNumber').addEventListener('tap',function(){
+				//验证手机号码
+					uid = document.getElementById('phoneNumber').value;
+					var regu = /^[1][3,5,7,8]\d{9}$/;
+					var re = new RegExp(regu);
+					if(!re.test(uid)){
+						mui.alert('手机号码格式有误，请确认！！！');
+						return;
+					}else{
+						mui.post(url+'/smscode',{uid:uid},function(data){})
+					}
+					
+				if(flag){
+					flag=false;
+					var gc = document.getElementById('getCodeNumber');
+					
+					var time1 = setInterval(function(){
+						if(t==1){
+							gc.innerText='获取验证码';
+							flag=true;
+							clearInterval(time1);
+							return;
+						}
+						t=t-1;
+						gc.innerText=t+'秒后再次发送';
+					},1000)
+					t=60;
+				}else{
+					mui.alert('验证码已发送')
+				}
+				
+			})
+			//点击登录
+			document.getElementById('log').addEventListener('tap',function(){
+				//获取输入的验证码
+				var code = document.getElementById('code').value;
+				var uid1 = document.getElementById('phoneNumber').value;
+				if(uid!=uid1){
+					alert('手机号码有误');
+					return;
+				}
+				mui.ajax(url+'/applogin',{
+					data:{
+						uid:uid,
+						code:code
+					},
+					type:'get',
+					dataType:'json',
+					success:function(data){
+						console.log(JSON.stringify(data));
+						if(data.success==1000){
+							mui.alert('登录成功');
+							var token = data.token;
+							//保存token
+							plus.storage.setItem('token',token);
+							//保存手机号码
+							plus.storage.setItem('uid',uid);
+							if(data.data.accountDeposit==0){
+								mui.toast('您还没有充值押金，去往押金充值页面');
+								mui.openWindow({
+									url:'./pages/pay.html'
+								})
+							}
+						}
+					},
+					error:function(xhr,type,err){
+						alert('请求出错')
+					}
+				})
+				
+			},false)
+		</script>
+	</body>
+
+</html>

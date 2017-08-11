@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="HandheldFriendly" content="true" />
+		<meta name="MobileOptimized" content="320" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=rmtT1e2a4k770D9jK1ouGODt"></script>
+		<title>扫码界面</title>
+		
+		<!--<script type="text/javascript">
+			(function(w) {
+				var waiting = null;
+				/**
+				 * 关闭等待框
+				 */
+				w.closeWaiting = function() {
+					waiting && waiting.close();
+					waiting = null;
+				};
+				// 处理返回事件
+				w.back = function(hide) {
+					if(w.plus) {
+						ws || (ws = plus.webview.currentWebview());
+						if(hide || ws.preate) {
+							ws.hide('auto');
+						} else {
+							ws.close('auto');
+						}
+					} else if(history.length > 1) {
+						history.back();
+					} else {
+						w.close();
+					}
+				};
+			})(window);
+		</script>-->
+		<script type="text/javascript" src="js/mui.min.js"></script>
+		<!--<script type="text/javascript">
+			var ws = null,
+				wo = null;
+			var scan = null,
+				domready = false;
+			// H5 plus事件处理
+			function plusReady() {
+				if(ws || !window.plus || !domready) {
+					return;
+				}
+				// 获取窗口对象
+				ws = plus.webview.currentWebview(); 
+				wo = ws.opener();
+				// 开始扫描
+				ws.addEventListener('show', function() {
+					scan = new plus.barcode.Barcode('bcid');
+					scan.onmarked = onmarked;
+					scan.start();
+				});
+				// 显示页面并关闭等待框
+				ws.show("pop-in");
+				//              wo.evalJS("closeWaiting()");
+			}
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
+			// 监听DOMContentLoaded事件
+			document.addEventListener("DOMContentLoaded", function() {
+				domready = true;
+				plusReady();
+			}, false);
+			// 二维码扫描成功
+			function onmarked(type, result, file) {
+				console.log(type);
+				switch(type) {
+					case plus.barcode.QR:
+						type = "QR";
+						break;
+					case plus.barcode.EAN13:
+						type = "EAN13";
+						break;
+					case plus.barcode.EAN8:
+						type = "EAN8";
+						break;
+					default:
+						type = "其它" + type;
+						break;
+				}
+				result = result.replace(/\n/g, '');
+				//              wo.evalJS("scaned('" + type + "','" + result + "','" + file + "');");
+				console.log(result);
+				var strArray = result.split("=");
+				var lockno = strArray[1];
+				console.log(lockno);
+				uid = plus.storage.getItem("phoneNum");
+				
+				mui.ajax(unlockUrl, {
+					data: {
+						uid: uid,
+						lockno: lockno
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						console.log(JSON.stringify(data.success));
+						console.log(JSON.stringify(data.data.orderId));
+						console.log("本次骑行的订单号："+JSON.stringify(data.data.orderId));
+						var orderId=JSON.stringify(data.data.orderId);
+						//缓存本次骑行的订单号
+						
+						plus.storage.setItem("orderId", orderId);
+						var success=JSON.stringify(data.success);
+						console.log(success);
+						if(success==1000){
+							mui.openWindow({
+								url:'/pages/Ride/ride_accounting.html'
+							})
+						}
+					}
+				});				
+			}
+		</script>-->
+		<style type="text/css">
+			html {
+				width: 100%;
+				height: 100%;
+			}
+			
+			body {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				font-family: Arial;
+				font-size: 16px;
+				color: #6c6c6c;
+				-webkit-touch-callout: none;
+				-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+				-webkit-text-size-adjust: none;
+			}
+			
+			#bcid {
+				width: 100%;
+				height:100%;
+				position: absolute;
+				/*top:0px;*/
+				bottom:0px;
+				text-align: center;
+			}
+			
+			.tip {
+				color: #FFFFFF;
+				font-weight: bold;
+				text-shadow: 0px -1px #103E5C;
+			}
+			
+			
+			.fbt {
+				width: 100%;
+				height: 100%;
+				background-color: #FFCC33;
+				float: left;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: #000;">
+		<div id="bcid">
+			<div style="height:40%"></div>
+			<p class="tip">...载入中...</p>
+		</div>
+		<footer style="width:100%;padding-left:10%;position:absolute;bottom:100px;left:0px;height:100px;z-index: 999;">
+			<button type="button" class="mui-icon iconfont icon-shou" style="width:40%;text-align:center;color:#fff;font-size:20px;background-color:transparent;border:none;"><i style="display:inline-block;width:100%;text-align:center;font-style:normal;position:absolute;top: 45px;left:4px;font-size:16px;">手动输入</i></button>
+			<button type="button" class="mui-icon iconfont icon-shoudiantong-copy" style="width:40%;text-align:center;color:#fff;font-size:20px;background-color:transparent;border:none;"><i style="display:inline-block;width:100%;text-align:center;font-style:normal;position:absolute;top: 45px;right:0px;font-size:16px;">手电筒</i></button>
+		</footer>
+	</body>
+</html>
+<script>
+	(function(w) {
+				var waiting = null;
+				/**
+				 * 关闭等待框
+				 */
+				w.closeWaiting = function() {
+					waiting && waiting.close();
+					waiting = null;
+				};
+				// 处理返回事件
+				w.back = function(hide) {
+					if(w.plus) {
+						ws || (ws = plus.webview.currentWebview());
+						if(hide || ws.preate) {
+							ws.hide('auto');
+						} else {
+							ws.close('auto');
+						}
+					} else if(history.length > 1) {
+						history.back();
+					} else {
+						w.close();
+					}
+				};
+			})(window);
+			var lon = null,
+				lat = null;
+			var ws = null,
+				wo = null;
+			var scan = null,
+				domready = false;
+			var url = 'https://sys.farina.cc/umb';
+			// H5 plus事件处理
+			function plusReady() {
+				if(ws || !window.plus || !domready) {
+					return;
+				}
+				// 获取窗口对象
+				ws = plus.webview.currentWebview(); 
+				wo = ws.opener();
+				// 开始扫描
+				ws.addEventListener('show', function() {
+					scan = new plus.barcode.Barcode('bcid');
+					scan.onmarked = onmarked;
+					scan.start();
+				});
+				// 显示页面并关闭等待框
+				ws.show("pop-in");
+//				wo.evalJS("closeWaiting()");
+			}
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
+			// 监听DOMContentLoaded事件
+			document.addEventListener("DOMContentLoaded", function() {
+				domready = true;
+				plusReady();
+			}, false);
+			// 二维码扫描成功
+			function onmarked(type, result, file) {
+				scan.close();
+				switch(type) {
+					case plus.barcode.QR:
+						type = "QR";
+						break;
+					case plus.barcode.EAN13:
+						type = "EAN13";
+						break;
+					case plus.barcode.EAN8:
+						type = "EAN8";
+						break;
+					default:
+						type = "其它" + type;
+						break;
+				}
+//				result = result.replace(/\n/g, '');
+				
+				//wo.evalJS("scaned('" + type + "','" + result + "','" + file + "');");
+				
+				var strArray = result.split("=");
+				var lockno = strArray[1];
+				uid = plus.storage.getItem("uid");
+				//获取位置信息
+				var geolocation = new BMap.Geolocation();
+				geolocation.getCurrentPosition(function(p){
+					lon = p.longitude;
+					lat = p.latitude;
+				})
+				var location = lon+','+lat;
+				mui.ajax(url+'/unlock', {
+					data: {
+						uid: uid,
+						lockno: lockno,
+						location:location
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					success: function(data) {
+						
+						console.log(JSON.stringify(data));
+//						console.log("本次骑行的订单号："+JSON.stringify(data.data.orderId));
+//						var orderId=JSON.stringify(data.data.orderId);
+						//缓存本次骑行的订单号
+						
+						plus.storage.setItem("orderId", orderId);
+						var success=JSON.stringify(data.success);
+						console.log(success);
+						if(success==1000){
+							mui.openWindow({
+								url:'/pages/Ride/ride_accounting.html'
+							})
+						}
+					}
+				});				
+			}
+</script>
